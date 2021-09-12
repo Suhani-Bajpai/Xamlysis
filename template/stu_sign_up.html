@@ -1,0 +1,55 @@
+<!doctype html>
+{% extends 'base1.html'%}
+{%block title%}Student signup{%endblock title%}
+{% block body %}
+<br>
+<div class="container" align="center" >
+    <form method="post" action="" autocomplete="on" name="stu_sign_up" style="border : 3px solid #4169E1;padding : 5px;width:70%">
+    {% csrf_token %}
+
+    {{form.as_p}}
+    <!--
+        <div class="form-group">
+        <label align="center;"><h1 style="color:#4169E1;">Sign Up</h1></label>
+    </div>
+    <div class="form-group">
+        <label for="name"style="width:150px; display: inline-block; color:#4169E1; "align=left>Name</label>
+        <input type="text" id="name" name="name"style="box-sizing: border-box;border: 3px solid #ccc;background-color: #B0C4DE;">
+    </div>
+    <div class="form-group">
+        <label for="username"style="width:150px; display: inline-block;color:#4169E1;"align=left >Username</label>
+        <input type="text"class="form control" id="usernname" name="username"style="box-sizing: border-box;border: 3px solid #ccc;background-color: #B0C4DE;">
+    </div>
+    <div class="form-group">
+        <label for="password"style="width:150px; display: inline-block;color:#4169E1;"align=left>Password</label>
+        <input type="text" id="password" name="password"style="box-sizing: border-box;border: 3px solid #ccc;background-color: #B0C4DE;">
+    </div>
+    <div class="form-group">
+        <label for="con_password"style="width:150px; display: inline-block;color:#4169E1;"align=left>Confirm Password</label>
+        <input type="text" id="con_password" name="con_password"style="box-sizing: border-box;border: 3px solid #ccc;background-color: #B0C4DE;">
+    </div>
+    <div class="form-group">
+        <label for="stu_class"style="width:150px; display: inline-block;color:#4169E1;"align=left>Class</label>
+        <input type="text" id="stu_class" name="stu_class"style="box-sizing: border-box;border: 3px solid #ccc;background-color: #B0C4DE;">
+    </div>
+    <div class="form-group">    
+        <label for="email_id"style="width:150px; display: inline-block;color:#4169E1;"align=left>Email-ID</label>
+        <input type="text" id="email_id" name="email_id"style="box-sizing: border-box;border: 3px solid #ccc;background-color: #B0C4DE;">
+    </div>
+    <div class="form-group">    
+        <label for="mob_no"style="width:150px; display: inline-block;color:#4169E1;"align=left>Mobile Number</label>
+        <input type="text" id="mob_no" name="mob_no"style="box-sizing: border-box;border: 3px solid #ccc;background-color: #B0C4DE;">
+    </div>
+    <div class="form-group">
+        <label for="institute_name"style="width:150px; display: inline-block;color:#4169E1;"align=left>Institute Name</label>
+        <input type="text" id="institute_name" name="institute_name"style="box-sizing: border-box;border: 3px solid #ccc;background-color: #B0C4DE;">
+    </div>
+    <div class="form-group">
+        <label for="subjects"style="width:150px; display: inline-block;color:#4169E1;"align=left>Courses Availed</label>
+        <input type="text" id="subjects" name="subjects"style="box-sizing: border-box;border: 3px solid #ccc;background-color: #B0C4DE;">
+    </div>-->
+    <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+</div>
+{% endblock body %}
+
