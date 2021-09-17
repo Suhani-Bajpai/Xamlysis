@@ -3,12 +3,24 @@
 {%block title%}Student signup{%endblock title%}
 {% block body %}
 <br>
-<div class="container" align="center" >
+<div  class="container" align="left" >
     <form method="post" action="" autocomplete="on" name="stu_sign_up" style="border : 3px solid #4169E1;padding : 5px;width:70%">
     {% csrf_token %}
 
     {{form.as_p}}
+    {{fm.as_p}}
+
+    
     <!--
+        {% if enteries %}
+        {% for en in entries%}
+        {{en.username}}
+        <a href="{% url 'updatedata' %}"></a>
+        <form action="{%url 'deletedata' en.username%}" method='POST'> {% csrf token %}<input type='submit' class='btn btn-danger' ></form>
+        {% end for %}
+        {% else %}
+        {% endif %}
+        
         <div class="form-group">
         <label align="center;"><h1 style="color:#4169E1;">Sign Up</h1></label>
     </div>

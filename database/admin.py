@@ -1,6 +1,6 @@
 from django.contrib import admin
 #from database.models import sample
-from database.models import User
+from database.models import *
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
@@ -21,3 +21,11 @@ class MyUserAdmin(UserAdmin):
     ) #this will allow to change these fields in admin module
 
 admin.site.register(User , UserAdmin)
+
+#@admin.register(class_stu_tech)
+"""
+class UserAdmin(admin.ModelAdmin):
+    list_display=('class_stu_tech' )
+"""
+
+

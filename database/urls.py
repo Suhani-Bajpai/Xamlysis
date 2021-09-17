@@ -8,6 +8,7 @@ urlpatterns = [
     path('change_setting/' , views.change_setting , name='change_setting'),
     path('chat_bot/' ,views.chat_bot , name='chat_bot'),
     path('login/' , views.login , name='login' ),
+    path('logout/' , views.logout , name='logout' ),
     path('query_page/' , views.query_page ,name='query_page'),
     path('sign_up/' , views.sign_up , name='sign_up'),
     path('student_exams_scheduled/' , views.stu_future , name='stu_future'),
@@ -24,4 +25,6 @@ urlpatterns = [
     #added for checking
     path('check/',views.base1,name="base1"),
     path('temp_sign_up' ,views.temp_sign_up , name="temp_sign_up"),
+    #path('delete/<int:primry_key>/' ,views.delete_data , name="deletedata"),
+    #path('update/<int:primry_key>/' ,views.update_data , name="updatedata"),
 ]

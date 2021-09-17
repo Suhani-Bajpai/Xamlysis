@@ -4,12 +4,12 @@ from database.models import class_stu_tech as CST
 from database.models import role_id as RI
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate , logout
+from django.contrib.auth import login as auth_login, authenticate , logout as auth_logout
 import datetime
 import mysql.connector
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 #from mysite.core.forms import SignUpForm
-from .forms import MyUserCreationForm
+from .forms import *
 
 
 # Create your views here.
@@ -19,22 +19,56 @@ def temp_sign_up(request):
     if request.method == 'POST':
         #form = SignUpForm(request.POST)
         form = MyUserCreationForm(request.POST)
+        fm=class_stu_tech_form(request.POST)
+        if fm.is_valid():
+            fm.save()
         if form.is_valid():
-            form.save()
+            user=form.save()
             #username = form.cleaned_data.get('username')
             #raw_password = form.cleaned_data.get('password1')
             #user = authenticate(username=username, password=raw_password)
-            #login(request, user)
+            auth_login(request, user)
             return redirect('home')
     else:
         form = MyUserCreationForm()
-    return render (request , 'stu_sign_up.html' , {'form':form})
+        fm=class_stu_tech_form()
+    return render (request , 'stu_sign_up.html' , {'form':form , 'fm':fm}  )
+
+
+def login(request): 
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method =="POST" :
+        form = AuthenticationForm(request , data=request.POST)
+        if form.is_valid():
+            username=form.cleaned_data.get('username')
+            password=form.cleaned_data.get('password')
+            user=authenticate(username=username , password=password)
+            if user is not None:
+                auth_login(request , user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect('home')
+            else:
+                messages.error(request,"Invalid username or password.")
+        else:
+    	    messages.error(request,"Invalid username or password.")
+	
+    form = AuthenticationForm()
+    return render(request , 'login.html' , {'form':form})
+
+def logout(request):
+    auth_logout(request)
+	
+    messages.info(request, "You have successfully logged out.") 
+    return redirect( 'home')
+
 
 def home (request):
     return render(request , 'landup_page.html')
 
 def about(request):
-    return render(request , 'about.html')
+    return render(request , 'about_page.html')
 
 def change_setting(request):
     return render(request , 'database/change_setting.html')
@@ -42,8 +76,6 @@ def change_setting(request):
 def chat_bot(request):
     return render(request , 'database/chat_bot.html')
 
-def login(request): 
-    return render(request , 'database/login.html')
 
 def query_page(request):
     return render(request , 'database/query_page.html')
@@ -165,6 +197,45 @@ def base1(request):
 
 #temporary log in
 """
+def temp_sign_up(request):
+    if request.method == 'POST':
+        #form = SignUpForm(request.POST)
+        form = MyUserCreationForm(request.POST)
+        fm=class_stu_tech_form(request.POST)
+        if fm.is_valid():
+            fm.save()
+        if form.is_valid():
+            user=form.save()
+            #username = form.cleaned_data.get('username')
+            #raw_password = form.cleaned_data.get('password1')
+            #user = authenticate(username=username, password=raw_password)
+            auth_login(request, user)
+            return redirect('home')
+    else:
+        form = MyUserCreationForm()
+        fm=class_stu_tech_form()
+
+    enteries = User.objects.all()
+    return render (request , 'stu_sign_up.html' , {'form':form , 'fm':fm , 'entries':entries}  )
+
+def delete_data(request , primary_key):
+    if request.method=='POST'
+        pi = User.objects.get(primary_key='value')
+        pi.delete()
+        return HttpResponseRedirect('/') 
+
+def update_data(request , primary_key):
+    if request.method=='POST':
+        pi = User.objects.get(primary_key="value")
+        fm = MyUserCreationForm(request.POST , instance=pi)
+        if fm.is_valid():
+            fm.save()
+        else:
+            pi = User.objects.get(primary_key="value")
+            fm = MyUserCreationForm( instance=pi)
+
+    return render(request , '' , {'form':form})
+
 def temp_login (request):
     con1 = mysql.connector.connect(host="localhost" , user="root" , password="priyanshi13" , database="xamlysis")
     cursor = con1.cursor()

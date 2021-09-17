@@ -1,0 +1,16 @@
+<!doctype html>
+{% extends 'base1.html'%}
+{%block title%}Student signup{%endblock title%}
+{% block body %}
+<br>
+<div  class="container" align="left" >
+    <form method="post" action="" autocomplete="on" name="stu_sign_up" style="border : 3px solid #4169E1;padding : 5px;width:70%">
+    {% csrf_token %}
+
+    {{form.as_p}}
+  
+    <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+    <p class="text-center">Don't have an account? <a href="/temp_sign_up">Create an account</a>.</p>
+</div>
+{% endblock body %}
