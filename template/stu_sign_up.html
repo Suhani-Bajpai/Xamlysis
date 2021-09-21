@@ -16,8 +16,8 @@
         {% for en in entries%}
         {{en.username}}
         <a href="{% url 'updatedata' %}"></a>
-        <form action="{%url 'deletedata' en.username%}" method='POST'> {% csrf token %}<input type='submit' class='btn btn-danger' ></form>
-        {% end for %}
+        <form action="{%url 'deletedata' en.username%}" method='POST'>  <input type='submit' class='btn btn-danger' ></form>
+        {% endfor %}
         {% else %}
         {% endif %}
         
