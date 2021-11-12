@@ -1,0 +1,58 @@
+<!doctype html>
+{% extends 'base1.html'%}
+{%block title%}TEACHERS HOME PAGE{%endblock title%}
+{% block body %}
+
+<br>
+
+
+
+
+<table align="center">
+
+    <tr>
+        <td>
+            <br>
+            <form method="get">
+            <button class="btn btn-primary" name="add_ques" type="submit" value={{data.0.exam_code}}>ADD QUESTION</button>   
+        </form>
+        </td>
+    </tr>
+    </table>
+
+{% for d in data %}
+
+{% if d.ques %}
+        <table  align="center" >
+        <tr >
+            <td colspan="10"  >
+                <div style="background-color:black;font-size: 15px;border-radius: 30px;width:1000px ;padding: 10px 20px;color: #fafbfc;border: 4px solid #003399;">
+               <br> QUES : {{d.ques}}<br><br>OPTION 1 : {{d.opt1}}<br> OPTION 2 : {{d.opt2}}<br>OPTION 3 : {{d.opt3}}<br>OPTION 4 : {{d.opt4}}<br><br>CORRECT OPTION : {{d.correct}}<br><br>MARKS : {{d.marks}}<br><br>
+               <!-- <button type="submit" name="course" style="background-color:black;font-size: 15px;border-radius: 12px;width:600px;padding: 10px 20px;color: #0044cc;border: 2px solid #003399;" value={{i.exam_code}}>
+                {{i.exam_title}}<br>{{i.date}}<br>{{i.duration}}<br>{{i.start_time}}<br>{{i.max_marks}}
+                </button>-->
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                <br>
+                <form  method="get">
+                <button class="btn btn-danger" name="del_ques" type="submit" value={{d.ques_id}}>DELETE</button></form>
+            </td>
+        </tr>
+        <br>
+        </table>
+{% endif %}
+{% endfor %}
+
+
+<!---
+    {{data.0.exam_code}}
+{% for cou in courses %}
+<p>{{cou.class_stu_tech}}</p>
+{% endfor %}</b>
+<form action="/teachers_home/?code={{i.exam_code}}" method="get">
+    </form>
+-->
+{% endblock body %}

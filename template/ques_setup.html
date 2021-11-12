@@ -1,0 +1,25 @@
+<!doctype html>
+{% extends 'base1.html'%}
+{%block title%}Student signup{%endblock title%}
+{% block body %}
+
+<br>
+{% for no_ques in nq %}
+<div  class="container" align="left" >
+    <form method="post" action="" autocomplete="on" name="stu_sign_up" style="border : 3px solid #4169E1;padding : 5px;width:70%">
+    {% csrf_token %}
+
+    {{form.as_p}}
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+</div>
+
+<b>
+{% endfor %}
+
+<!---
+{% for cou in courses %}
+<p>{{cou.class_stu_tech}}</p>
+{% endfor %}</b>-->
+{% endblock body %}

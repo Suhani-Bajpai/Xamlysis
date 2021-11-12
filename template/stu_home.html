@@ -1,0 +1,169 @@
+<!doctype html>
+
+{% extends 'base1.html'%}
+
+{%block title%} WELCOME {%endblock title%}
+{%block title2%} 
+<style>
+* {
+  box-sizing: border-box;
+}
+div.ex1 {
+  background-color: white;
+  width: 100%;
+  height: 200px;
+  overflow-y: scroll;
+}
+div.ex2 {
+  background-color: white;
+  width: 100%;
+  height: 200px;
+  overflow-y: scroll;
+}
+
+</style>
+{%endblock title2%}
+
+{% block body %}
+<br><br>
+<div class="card" style="width: 50%;border-radius: 5px 100px 0 0;box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);transform: translate(+50%,0%)">
+  <div class="card-header">
+    {% if user.role_id.role_id is 2 %} Student Profile {% else %} Teacher Profile {% endif %}
+  </div>
+  <div class="card-body">
+    <p class="card-text"> Name : {{user.first_name}} {{user.last_name}}<br>Class : {%for x in class%}{{x}} {%endfor%} <br> Mobile no. : {{mobile}}</p>
+  </div>
+</div>
+<!--
+  We have to add ADD CLASS LINK SOMEWHERE AS WE ARE NOT DOING ANY ENTRY TO CLASS_STU_TECH
+-->
+<br>
+
+{% if user.role_id.role_id is 2 %}
+<table class="table" style="text-align:center">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" >ONGOING AND UPCOMING TESTS</th>
+    </tr>
+  </thead>
+</table>
+<div class="ex1">
+<table class="table" style="text-align:center">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" style="width:20%">EXAM</th>
+      <th scope="col" style="width:30%">LAST DATE</th>
+      <th scope="col" style="width:30%">MAX SCORE</th>
+      <th scope="col" style="width:20%">ATTEMPT</th>
+    </tr>
+  </thead>
+  <tbody>
+  <!--
+    now here we will get informations from exam schedule table and using for loop will add datas for all columns and also link with the respetive test 
+  -->
+  {%for x in next_exams%}
+    <tr>
+      <td>{{x.exam_code}}</td>
+      <td>{{x.date}}</td>
+      <td>{{x.max_marks}}</td>
+      <td>
+      <form action="/test/" method="get">
+        <button type="submit" name="exid" value={{x.exam_code}} style="background-color: black;border-radius: 12px;font-size: 15px;color: #0044cc;width: 100px;border: 2px solid #003399;">START</button>
+      </td>
+    </tr>
+  {%endfor%}
+  </tbody>
+</table>
+</div>
+<table class="table" style="text-align:center">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" >PAST TESTS</th>
+    </tr>
+  </thead>
+</table>
+<div class="ex2">
+<table class="table" style="text-align:center">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" style="width:20%">EXAM</th>
+      <th scope="col" style="width:30%">YOUR SCORE</th>
+      <th scope="col" style="width:30%">PERCENTAGE</th>
+      <th scope="col" style="width:20%">VIEW ANSWERS</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for x in pre_exams%}
+    <tr>
+      <td>{{x.exam_code_id}}</td>
+      <td>{{x.scored_marks}}</td>
+      <td> {{x.percentage}}</td>
+      <td>
+        <form action="/correct_ans/" method="post">
+        {% csrf_token %}
+        <button type="submit" name="course" value={{x.exam_code_id}} style="background-color: black;border-radius: 12px;font-size: 15px;color: #0044cc;width: 100px;border: 2px solid #003399;">View Here</button>
+      </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+</div>
+
+{% else %}
+<br><br>
+<table class="table" align="center" style="text-align:center; width:50%">
+
+    <tr>
+      <th scope="col" >
+        <div class="card" align="center" style="width: 100%;border-radius: 5px 100px 0 0;box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+        <a href="/exam_detail">
+          SET UP AN EXAM!
+        </a>
+        </div>
+      </th>
+    </tr>
+
+
+    <tr>
+      <th scope="col" >
+        <div class="card" align="center" style="width: 100%;border-radius: 5px 100px 0 0;box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+        <a href="/change_setting/">
+          CHANGE MOBILE NUMBER :)
+        </a>
+        </div>
+      </th>
+    </tr>
+    <tr>
+      <th scope="col" >
+        <br><br>
+        <div class="card" >
+          <form action="/teachers_home/" method="get">
+            <button type="submit" name="upcoming" value=1 style="width: 100%;background-color:white ;border-radius: 5px 100px 0 0;box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+          UPCOMING EXAMS SCHEDULED
+          </button>
+          </form>
+        </a>
+        </div>
+      </th>
+    </tr>
+
+    <tr>
+      <th scope="col" >
+        <div class="card" >
+          <form action="/teachers_home/" method="get">
+            <button type="submit" name="previous" value=1 style="width: 100%;background-color:white ;border-radius: 5px 100px 0 0;box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);">
+          PREVIOUS EXAMS SCHEDULED
+          </button>
+          </form>
+        </a>
+        </div>
+      </th>
+    </tr>
+
+    
+</table>
+
+
+
+{% endif %}
+{%endblock body%}

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'database.apps.DatabaseConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +83,7 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'xamlysisdb',
+        'NAME': 'xamlysis_datab',
         'USER': 'root',
         'PASSWORD': 'priyanshi13',
         'HOST': 'localhost',

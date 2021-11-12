@@ -1,0 +1,39 @@
+<!doctype html>
+{% extends 'base1.html'%}
+{%block title%}TEACHERS HOME PAGE{%endblock title%}
+{% block body %}
+
+<br>
+{% for i in edobj %}
+
+ 
+        <table align="center" >
+        <tr>
+            <td colspan="10">
+                <form action="/teachers_home/?code={{i.exam_code}}" method="get">
+                <button type="submit" name="course" style="background-color:black;font-size: 15px;border-radius: 30px;width:600px;padding: 10px 20px;color: #ffffff;border: 10px solid #003399;" value={{i.exam_code}}>
+                EXAM TITLE : {{i.exam_title}}<br><br>DATE OF THE CONDUCTION : {{i.date}}<br>DURATION : {{i.duration}}<br>START TIME : {{i.start_time}}<br><br>MAXIMUM MARKS : {{i.max_marks}} <br>
+                </button></form>
+            </td>
+        </tr><br>
+        <tr align ="right">
+            <td >
+                <form method="get">
+                <button class="btn btn-primary" type="submit" name="edit" value={{i.exam_code}}>EDIT</button> </form>
+            </td>
+            <td align="left">
+                <form  method="get">
+                <button class="btn btn-danger" name="code" type="submit" value={{i.exam_code}}>DELETE</button></form>
+            </td></tr>
+    
+        </table>
+
+{% endfor %}
+
+<!---
+{% for cou in courses %}
+<p>{{cou.class_stu_tech}}</p>
+{% endfor %}</b>
+<a href="/exam_delete/">
+-->
+{% endblock body %}

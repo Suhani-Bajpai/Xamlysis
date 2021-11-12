@@ -1,15 +1,15 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.forms.models import ModelForm
 from database.models import *
 from django.core import validators
 
 class MyUserCreationForm(UserCreationForm):
     email_id = forms.EmailField(max_length=200 )
     
-
     class Meta(UserCreationForm):
         model = User
-        fields = ('email_id', 'username' , 'first_name' , 'last_name','mobile_no' ,)
+        fields = ('role_id','email_id', 'username' , 'first_name' , 'last_name','mobile_no' ,)
         #widgets={
         #    'email_id' : forms.EmailInput(attrs={'class':'form-control'}),
         #}
@@ -27,3 +27,38 @@ class class_stu_tech_form(forms.ModelForm):
         #widgets={
         #    'class_stu_tech' : forms.TextInput(attrs={'class':'form-control'}),
         #}
+
+class Add_Question_Form(ModelForm):
+    class Meta:
+        model=ques_table
+        fields="__all__"
+
+class Exam_Detail_Form(ModelForm):
+    class Meta:
+        model=exam_details
+        fields=('exam_code', 'exam_title' , 'date' ,'start_time' ,'duration' ,'no_of_ques' , 'max_marks' , 'course_id' ,)
+
+class Change_Date_Form(ModelForm):
+    class Meta:
+        model=exam_details
+        fields=('date',)
+
+class Change_Duration_Form(ModelForm):
+    class Meta:
+        model=exam_details
+        fields=('duration',)
+
+class  Change_Start_Time_Form(ModelForm):
+    class Meta:
+        model=exam_details
+        fields=('start_time',)
+
+class Ques_Setup_Form(ModelForm):
+    class Meta:
+        model=ques_table
+        fields=('ques', 'option1', 'option2' , 'option3' , 'option4' , 'correct' , 'marks' ,)
+
+class  Change_Mobile_No_Form(ModelForm):
+    class Meta:
+        model=User
+        fields=('mobile_no',)

@@ -1,0 +1,48 @@
+<!doctype html>
+{% extends 'base1.html'%}
+{% block title %}Class Selection{% endblock title %}
+{% block body %}
+<br><br>
+<h2 align="center";>Manage your classes !</h2><br>
+<h3 align="left";>You can add classes by selecting them from ADD CLASS,and remove them by selecting from REMOVE CLASS</h3>
+<!--
+<p style="background-color: black;color: white;">Current Courses: - {% for x in ac %} {{x}} {%endfor%}</p>
+-->
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col">
+<h1 align="center";>ADD CLASS</h1><br><br>
+{% for x in cnj %}
+<form action="/add_class/" method="post">
+    {% csrf_token %}
+        <table align="center" >
+        <tr>
+            <th colspan="2">
+                <button type="submit" name="class" style="background-color:black;font-size: 15px;border-radius: 12px;width:100px;padding: 10px 20px;color: #0044cc;border: 2px solid #003399;" value={{x}}>{{x}}</button>
+            </th>
+        </tr>
+        </table>
+</form>
+
+{% endfor %}
+    </div>
+    <div class="col">
+<h1  align="center" >REMOVE CLASS</h1><br><br>
+{% for x in cj %}
+<form action="/remove_class/" method="post">
+    {% csrf_token %}
+        <table align="center">
+        <tr>
+            <th colspan="2">
+                <button type="submit" style="background-color: black;border-radius: 12px;font-size: 15px;color: #0044cc;width: 100px;padding: 10px 20px;border: 2px solid #003399;" name="class" value={{x}}>{{x}}</button>
+            </th>
+        </tr> 
+        </table>
+</form>
+{% endfor %}        
+    </div>
+  </div>
+</div>
+<br><br><br><br>
+{% endblock body %}

@@ -1,0 +1,37 @@
+<!doctype html>
+{% extends 'base1.html'%}
+{%block title%}TEACHERS HOME PAGE{%endblock title%}
+{% block body %}
+
+<br><br>
+
+<table align="center" >
+    <tr>
+        <td >
+            <button type="button" name="change_date" style="background-color:black;font-size: 15px;border-radius: 30px;width:400px;padding: 10px 20px;color: #ffffff;border: 10px solid #003399;" value="1">
+                CHANGE_MOBILE_NUMBER
+            </button>
+        </td>
+
+        <td >
+            <div  class="container" align="center" >
+            <form method="post" action="" autocomplete="on" name="" style="border : 3px solid #4169E1;padding : 5px;">
+            {% csrf_token %}
+
+            {{form.as_p}}
+
+            <button class="btn btn-primary" type="submit" >Submit</button>
+            </form></div><b>
+
+        </td>
+    </tr>
+</table>
+
+
+<!---
+{% for cou in courses %}
+<p>{{cou.class_stu_tech}}</p>
+{% endfor %}</b>
+<a href="/exam_delete/">
+-->
+{% endblock body %}

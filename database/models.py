@@ -2,24 +2,24 @@ from os import P_OVERLAY
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.db.models.deletion import CASCADE
-from django.db.models.fields import AutoField
+from django.db.models.fields import AutoField, IntegerField
+from django.db.models.fields import related
 from django.db.models.fields.related import ForeignKey
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 # Create your models here.
 
-
 class User(AbstractUser):
-    email_id = models.EmailField(max_length=200 , unique=True)
+    email_id = models.EmailField(max_length=200  , primary_key=True ,unique=True)
     mobile_no = models.CharField(max_length=200 , default="0")
+    role_id = models.ForeignKey("role_id" , on_delete=models.CASCADE , default=2)
     USERNAME_FIELD = 'email_id'
     
     REQUIRED_FIELDS = [] 
     # A list of the field names that will be prompted for when creating a user via the createsuperuser management command. 
     # The user will be prompted to supply a value for each of these fields. 
     # REQUIRED_FIELDS has no effect in other parts of Django, like creating a user in the admin.
-    
 
 class UserManager(BaseUserManager):
 
@@ -32,6 +32,12 @@ class UserManager(BaseUserManager):
 
         user.set_password(password)
         user.save(using = self.db)
+        return user
+
+    def create_superuser(self, username, password, **kwargs):
+        user = self.model(email=username, is_staff=True, is_superuser=True,**kwargs)
+        user.set_password(password)
+        user.save()
         return user
 
 
@@ -59,16 +65,16 @@ class sign_up(models.Model):
 class class_stu_tech(models.Model):
     role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE)
     #email_id=models.ForeignKey("sign_up" , on_delete=models.CASCADE)
-    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
+    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE )
     class_stu_tech=models.IntegerField()
     serial_no=models.AutoField(primary_key=True)
 
 
 class courses_availed(models.Model):
-    course_id=models.ForeignKey("course_id" , on_delete=models.CASCADE)
+    course_id=models.ForeignKey("course_id" , on_delete=models.CASCADE )
     role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE)
     #email_id=models.ForeignKey("sign_up" , on_delete=models.CASCADE)
-    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
+    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE )
     serial_no=models.AutoField(primary_key=True)
 
 class exam_details(models.Model):
@@ -79,9 +85,10 @@ class exam_details(models.Model):
     duration=models.DurationField()
     no_of_ques=models.IntegerField()
     max_marks=models.IntegerField()
-    course_id=models.ForeignKey("course_id" , on_delete=models.CASCADE)
+    course_id=models.ForeignKey("course_id" , on_delete=models.CASCADE )
     #email_id=models.ForeignKey("sign_up" , on_delete=models.CASCADE)
-    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
+    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE )
+    class_stu = models.IntegerField(default=11)
 
 class ques_table(models.Model):
     ques_id=models.CharField(max_length=50 , primary_key=True)
@@ -90,42 +97,43 @@ class ques_table(models.Model):
     option2=models.CharField(max_length=200)
     option3=models.CharField(max_length=200)
     option4=models.CharField(max_length=200)
-    correct=models.BooleanField()
+    correct=models.IntegerField()
     marks=models.IntegerField()
-    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE)
+    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE )
 
 class answer_table(models.Model):
-    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE)
-    ques_id=models.ForeignKey("ques_table",on_delete=models.CASCADE)
+    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE )
+    ques_id=models.ForeignKey("ques_table",on_delete=models.CASCADE , related_name="ques_idd")
     #email_id=models.ForeignKey("sign_up",on_delete=models.CASCADE)
-    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
-    role_id=models.ForeignKey("role_id",on_delete=models.CASCADE)
+    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE )
+    role_id=models.ForeignKey("role_id",on_delete=models.CASCADE )
     option_marked=models.IntegerField()
     check_correct=models.BooleanField()
 
 class score_table(models.Model):
-    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE)
+    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE )
     #email_id=models.ForeignKey("sign_up" , on_delete=models.CASCADE)
-    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
-    role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE)
+    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE )
+    role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE )
     scored_marks=models.IntegerField()
+    percentage=models.IntegerField()
 
 class registration_table(models.Model):
-    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE)
+    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE )
     #email_id=models.ForeignKey("sign_up" , on_delete=models.CASCADE)
-    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
-    role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE)   
+    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE )
+    role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE )   
 
 class notes_table(models.Model):
     #email_id=models.ForeignKey("sign_up" , on_delete=models.CASCADE)
-    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
-    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE)
+    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE )
+    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE )
     notes=models.TextField(max_length=500)
 
 class query_table(models.Model):
     #email_id=models.ForeignKey("sign_up" , on_delete=models.CASCADE)
-    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
-    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE)
+    email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE )
+    exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE )
     role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE)
     query=models.TextField(max_length=500)
 
