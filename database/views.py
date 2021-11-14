@@ -35,6 +35,20 @@ def temp_sign_up(request):
             #Class_stu_tech.save()
             #fm.save()
         if form.is_valid():
+            """ri=form.cleaned_data['role_id']
+            ei=form.cleaned_data['email_id']
+            username=form.cleaned_data['username']
+            fn=form.cleaned_data['first_name']
+            ln=form.cleaned_data['last_name']
+            mn=form.cleaned_data['mobile_no']
+            pwd=form.cleaned_data['password']
+
+            if ri=="TEACHER":
+                ri=role_id.objects.get(role_id=1)
+            else:
+                ri=role_id.objects.get(role_id=2)
+            user=User(role_id=ri , email_id=ei,username=username,first_name=fn , last_name=ln , mobile_no=mn,password=pwd)
+            user.save()"""
             user=form.save()
             #username = form.cleaned_data.get('username')
             #raw_password = form.cleaned_data.get('password1')
@@ -128,10 +142,27 @@ def stu_future(request):
 
 def stu_home(request):
     current_user=request.user
-    stud_data = CST.objects.filter(email_id=current_user.email_id,)
+    if request.GET.get('reg'):
+        regi=registration_table(exam_code_id=request.GET.get('reg') , email_id_id=current_user.email_id , role_id_id=current_user.role_id.role_id)
+        regi.save()
+        return HttpResponse('succeed')
+
+    if(current_user.role_id.role_id==2):
+        stud_data = CST.objects.get(email_id=current_user.email_id,)
+    else:
+        stud_data = CST.objects.filter(email_id=current_user.email_id,)
+    #print(stud_data)
+
     all=[]  
-    [all.append(str(x.class_stu_tech)) for x in stud_data]
+    if(current_user.role_id.role_id==2):
+        all=[stud_data.class_stu_tech]
+    else:
+        [all.append(str(x.class_stu_tech)) for x in stud_data]
+    
     exam_data = exam_details.objects.all()
+    if(current_user.role_id==2):
+        exam_data = exam_details.objects.filter(class_stu=stud_data.class_stu_tech)
+    #print(exam_data)
     availed_courses = courses_availed.objects.filter(email_id=current_user.email_id,)
     ac=[]
     [ac.append(str(x.course_id)) for x in availed_courses]
@@ -140,24 +171,42 @@ def stu_home(request):
         strt=s.find('(')+1
         end=s.find(')',strt)
         acc.append(s[strt:end])
+
     exams=[]
-    for s in exam_data:
-        if (s.course_id_id in acc):
-            exams.append(s)
+    if current_user.role_id.role_id==2:
+        for s in exam_data:
+            if (s.course_id_id in acc and s.class_stu==stud_data.class_stu_tech ):
+                #print(s.class_stu , stud_data.class_stu_tech , "HELLO\n" )
+                exams.append(s)
+
     given_exams = score_table.objects.filter(email_id_id=current_user.email_id,)
     next_exams=[]
     donttake=[]
+    today_exams=[]
     [donttake.append(str(x.exam_code_id)) for x in given_exams]
     for i in exams:
-        if (i.date >= datetime.datetime.now().date()):
+        if (i.date > datetime.datetime.now().date()):
             if(i.exam_code not in donttake):
                 next_exams.append(i)
+        elif i.date==datetime.datetime.now().date():
+            if(i.exam_code not in donttake):
+                today_exams.append(i)
+
+    
+
+    reg=registration_table.objects.filter(email_id=current_user.email_id).values('exam_code')
+    regi=[]
+    [regi.append(i['exam_code']) for i in reg]
+    #print(regi)
+
 
     context={
         'class': all,
         'mobile':current_user.mobile_no,
         'next_exams':next_exams,
-        'pre_exams':given_exams
+        'pre_exams':given_exams,
+        'today_exams':today_exams,
+        'register':regi,
     }
     return render(request , 'stu_home.html',context)
 
@@ -255,20 +304,28 @@ def teach_future(request):
 
 
 
+
 def teach_home(request):
     current_user=request.user
-    edobj=exam_details.objects.filter(email_id_id=current_user.email_id).values('exam_title' , 'exam_code', 'date' , 'max_marks' , 'duration' , 'start_time')
+    edobj=exam_details.objects.filter(email_id_id=current_user.email_id).values('exam_title' , 'exam_code', 'date' , 'max_marks' , 'duration' , 'start_time' ,'class_stu' ,)
     edobj=list(edobj)
     #print(edobj)
     #edobj=edobj[:]["exam_title"]
     #no_q=exam_details.objects.filter(exam_code=ec).values('no_of_ques')[0]["no_of_ques"]
-    #print(edobj)
+
     if request.GET.get('course'):
         if request.method=="POST":
             return HttpResponse("STAY BLESSED AND WARM")
         print("yes Hello World")
+        edobj=exam_details.objects.filter(exam_code=request.GET.get('course')).values('exam_title' , 'exam_code', 'date' , 'max_marks' , 'duration' , 'start_time' ,'class_stu' ,'no_of_ques','course_id')
+        edobj=list(edobj)
         ques = ques_table.objects.filter(exam_code__exam_code__icontains=request.GET.get('course'))
         data=[]
+        print(request.GET.get('prev_up'))
+        if request.GET.get('prev_up')=='2':
+            flag=0
+        else:
+            flag=1
         ques=list(ques)
         random.shuffle(ques)
         for quest in ques:
@@ -286,8 +343,65 @@ def teach_home(request):
         if data==[]:
             data.append({"exam_code" : request.GET.get('course'),})
         print(data)
+
+        regist=registration_table.objects.filter(exam_code_id=request.GET.get('course'))
+        print(regist)
+        regist=list(regist)
+        registration=[]
+        for regi in regist:
+            print(regi.exam_code,regi.email_id)
+            u=User.objects.get(email_id=regi.email_id)
+            print(u.first_name)
+            registration.append({
+                "first_name" : u.first_name,
+                "last_name" : u.last_name,
+                "mobile_no" : u.mobile_no,
+                "email_id" : regi.email_id
+        })
+    
+        score=score_table.objects.filter(exam_code_id=request.GET.get('course'))
+        scores=[]
+        for s in score:
+            u=User.objects.get(email_id=s.email_id)
+            scores.append({
+                "name": u.first_name+u.last_name,
+                "email_id" : u.email_id,
+                "marks": s.scored_marks,
+                "percentage": s.percentage,
+            })
+
+        min=edobj[0]["max_marks"] 
+        max=0 
+        summary=[] 
+        count=0
+        sum=0
+        for s in score:
+            count+=1
+            if s.scored_marks>=max:
+                max=s.scored_marks
+            elif s.scored_marks<=min:
+                min=s.scored_marks
+            sum+=s.scored_marks
+        if request.GET.get('prev_up')=='1':
+            summary.append({
+            "max_marks" : max,
+            "min_marks" : min,
+            "average" : sum/count,
+            "no_of_stu" : count,
+        })
+
+        que=[]
+        query=query_table.objects.filter(exam_code=request.GET.get('course'))
+        for q in query:
+            u=User.objects.get(email_id=q.email_id_id)
+            que.append({
+                "query":q.query,
+                "email_id":u.email_id,
+                "name":u.first_name+u.second_name,
+                "mobile_no":u.mobile_no,
+            })
         payload ={ 'data':data}
-        return render(request , 'teach_schedule.html' , {'data' :data,})
+        return render(request , 'teach_schedule.html' , {'data' :data, 'register':registration ,'score':scores ,'flag':flag, 'edobj':edobj, 'summary':summary , "query":que})
     
     elif request.GET.get('code'):
         print(request.GET.get('code'))
@@ -356,7 +470,6 @@ def teach_home(request):
             obj.save(update_fields=['start_time'])
             return redirect('teach_home')
 
-    
     elif request.GET.get('add_ques'):
         print("positive attitude")
         form = Ques_Setup_Form()
@@ -371,7 +484,7 @@ def teach_home(request):
         return HttpResponse("Stay Healthy")
 
     elif request.GET.get('upcoming'):
-        obj=exam_details.objects.filter(email_id=current_user.email_id).values('exam_title' , 'exam_code', 'date' , 'max_marks' , 'duration' , 'start_time')
+        obj=exam_details.objects.filter(email_id=current_user.email_id).values('exam_title' , 'exam_code', 'date' , 'max_marks' , 'duration' , 'start_time' , 'class_stu',)
         d=datetime.datetime.now()
         list_obj=[]
         for x in obj:
@@ -379,18 +492,34 @@ def teach_home(request):
             print(x['date'])
             if x['date'] >=d.date() :
                 list_obj.append(x)
-        return render(request , 'teach_home.html' , {'edobj':list_obj , })
+        flag=0
+        return render(request , 'teach_home.html' , {'edobj':list_obj ,'flag':flag, })
 
     elif request.GET.get('previous'):
-        obj=exam_details.objects.filter(email_id=current_user.email_id).values('exam_title' , 'exam_code', 'date' , 'max_marks' , 'duration' , 'start_time')
+        obj=exam_details.objects.filter(email_id=current_user.email_id).values('exam_title' , 'exam_code', 'date' , 'max_marks' , 'duration' , 'start_time' , 'class_stu',)
         d=datetime.datetime.now()
         list_obj=[]
         for x in obj:
             if x['date'] <d.date() :
                 list_obj.append(x)
-        return render(request , 'teach_home.html' , {'edobj':list_obj , })
+        #list_obj.append(0)
+        flag=1
+        return render(request , 'teach_home.html' , {'edobj':list_obj ,'flag':flag, })
 
     return render(request , 'teach_home.html' , {'edobj':edobj , })
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -588,11 +717,23 @@ def show(request):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 def test(request):
     current_user=request.user
     if request.method == 'POST':
         print(request.POST)
-        questions=ques_table.objects.all()
+        exid1=request.POST.get('exid')
+        questions=ques_table.objects.filter(exam_code=exid1)
         score=0
         wrong=0
         correct=0
@@ -605,8 +746,13 @@ def test(request):
             if ans ==  request.POST.get(q.ques):
                 score+=q.marks
                 correct+=1
+                o_ref=answer_table(exam_code_id=exid1,email_id_id=current_user.email_id,check_correct=1,role_id_id=2,option_marked=q.correct,ques_id_id=q.ques_id)
+                o_ref.save()
             else:
                 wrong+=1
+                o_ref=answer_table(exam_code_id=exid1,email_id_id=current_user.email_id,check_correct=0,role_id_id=2,option_marked=q.correct,ques_id_id=q.ques_id)
+                o_ref.save()
+
         percent = score/(total) *100
         exid=request.POST.get("exid")
         #print(score_table.objects.all().order_by('-id')[0].id,'-------')
@@ -623,19 +769,22 @@ def test(request):
         }
         return render(request,'test_result.html',context)
     else:
-        questions=ques_table.objects.all()
         examid=request.GET.get("exid")
+        questions=ques_table.objects.filter(exam_code=examid)
         instr=exam_details.objects.get(exam_code=examid)
+        timee=str(instr.duration)
+        max_time=60
         context = {
             'questions':questions,
-            'inst':instr,
-            'examid':examid
+            'inst':instr, 
+            'examid':examid,
+            'max_time':max_time
         }
         return render(request,'test.html',context)
 
 def correct_ans(request):
     exam_id1 = request.POST.get("course")
-    all=ques_table.objects.all()
+    #all=ques_table.objects.all()
     ans=ques_table.objects.filter(exam_code_id=exam_id1)
     for i in ans:
         print(i.exam_code_id)
@@ -759,6 +908,7 @@ def exam_detail(request):
             nq=form.cleaned_data['no_of_ques']
             mm=form.cleaned_data['max_marks']
             ci=form.cleaned_data['course_id']
+            class_=form.cleaned_data['class_']
             request.session['exam_code']=ec
             count=1
             request.session['cnt']=count
@@ -768,7 +918,7 @@ def exam_detail(request):
             #print(user)
             ei=current_user.email_id
             print(ei)
-            fm=exam_details(exam_code=ec , exam_title=et , date=d,start_time=st,duration=du, no_of_ques=nq , max_marks=mm, course_id=ci , email_id_id=ei)
+            fm=exam_details(exam_code=ec , exam_title=et , date=d,start_time=st,duration=du, no_of_ques=nq , max_marks=mm, course_id=ci , email_id_id=ei , class_stu=class_)
             fm.save()
             #form.save()
             global exam_code

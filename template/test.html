@@ -12,7 +12,7 @@
 <div class="card" style="width: 80%;border-radius: 5px 100px 0 0;box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);transform: translate(+10%,0%)">
   <div class="card-header">
     <h2>{{inst.exam_title}}</h2>
-    MAX TIME:    {{inst.duration}} seconds<br>
+    MAX TIME:     {{max_time}}<br>
     MAX SCORE:   {{inst.max_marks}}<br>
     No. of ques: {{inst.no_of_ques}}<br>        
   </div>
@@ -21,9 +21,9 @@
   </div>
 </div>
 <br><br>
-<div align="right " id="displaytimer"><b>Time Left: {{inst.duration}} seconds</b></div>
+<div align="right" id="displaytimer"><b>Time Left: {{max_time}}</b></div>
 <br><br>
- <form method='post' action='/test/'>
+ <form method='post' action='/test/' id='test'>
     {% csrf_token %}
     {% for q  in questions%}
 
@@ -64,28 +64,29 @@
     </div>
     <br><br>
     {% endfor %}
+    <input name="exid" value={{examid}} type="hidden"> 
     <input id='timer' type='hidden' name="timer" value="">
     <br>
     <button type="submit" name="exid" value={{examid}} style="background-color: black;border-radius: 12px;font-size: 15px;color: #0044cc;width: 100px;border: 2px solid #003399;">Submit</button>
   </form>
     {% block script %}
         <script>
- 
-            console.log('hello world')
             const timer=document.getElementById('displaytimer')
             console.log(timer.textContent)
             const inputtag = document.getElementById('timer')
- 
             t=0
             setInterval(()=>{
                 t+=1
-                tl={{inst.duration}}-t
-                timer.innerHTML ="<b>Time Left: " +tl+" seconds</b>"
+                tl={{max_time}}-t
+                timer.innerHTML ="<b>Time Left: " +tl+" </b>"
                 inputtag.value = t
+                if (t=={{max_time}}){
+                    alert("Time Up");
+                    $("#test").submit();
+                }
             },1000)  
         </script>
     {% endblock script %}
- 
 </div>
         <br>
        

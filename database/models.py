@@ -80,7 +80,7 @@ class courses_availed(models.Model):
 class exam_details(models.Model):
     exam_code=models.CharField(max_length=50 , primary_key=True)
     exam_title=models.TextField()
-    date=models.DateField()
+    date=models.DateField(help_text="YYYY-MM-DD")
     start_time=models.TimeField()
     duration=models.DurationField()
     no_of_ques=models.IntegerField()
@@ -116,7 +116,7 @@ class score_table(models.Model):
     email_id = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE )
     role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE )
     scored_marks=models.IntegerField()
-    percentage=models.IntegerField()
+    percentage=models.DecimalField(max_digits=5,decimal_places=2)
 
 class registration_table(models.Model):
     exam_code=models.ForeignKey("exam_details" , on_delete=models.CASCADE )

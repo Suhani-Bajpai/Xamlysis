@@ -3,22 +3,207 @@
 {%block title%}TEACHERS HOME PAGE{%endblock title%}
 {% block body %}
 
+<style>
+    div.ex3 {
+  background-color: white;
+  width: 100%;
+  height: 200px;
+  overflow-y: scroll;
+}
+</style>
 <br>
 
 
+<table class="table" style="text-align:center">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col" >EXAM DETAILS</th>
+      </tr>
+    </thead>
+  </table>
+  <div class="ex3">
+    <table class="table" style="text-align:center">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" style="width:10%">COURSE ID</th>
+          <th scope="col" style="width:10%">EXAM CODE</th>
+          <th scope="col" style="width:10%">EXAM TITLE</th>
+          <th scope="col" style="width:10%">DATE</th>
+          <th scope="col" style="width:10%">START TIME</th>
+          <th scope="col" style="width:10%">DURATION</th>
+          <th scope="col" style="width:10%">NUMBER OF QUESTIONS</th>
+          <th scope="col" style="width:10%">MAXIMUM MARKS</th>
+          <th scope="col" style="width:10%">CLASS</th>
+        </tr>
+      </thead>
+      <tbody>
+      <!--
+        now here we will get informations from exam schedule table and using for loop will add datas for all columns and also link with the respetive test 
+      -->
+      {%for ed in edobj %}
+        <tr>
+          <td>{{ed.course_id}}</td>
+          <td>{{ed.exam_code}}</td>
+          <td>{{ed.exam_title}}</td>
+          <td>{{ed.date}}</td>
+          <td>{{ed.start_time}}</td>
+          <td>{{ed.duration}}</td>
+          <td>{{ed.no_of_ques}}</td>
+          <td>{{ed.max_marks}}</td>
+          <td>{{ed.class_stu}}</td>
+        </tr>
+      {%endfor%}
+      </tbody>
+    </table>
+    </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+<table class="table" style="text-align:center">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col" >STUDENTS REGISTERED</th>
+      </tr>
+    </thead>
+  </table>
+  <div class="ex3">
+    <table class="table" style="text-align:center">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" style="width:20%">FIRST NAME</th>
+          <th scope="col" style="width:30%">LAST NAME</th>
+          <th scope="col" style="width:30%">EMAIL ID</th>
+          <th scope="col" style="width:20%">MOBILE NO</th>
+        </tr>
+      </thead>
+      <tbody>
+      <!--
+        now here we will get informations from exam schedule table and using for loop will add datas for all columns and also link with the respetive test 
+      -->
+      {%for r in register %}
+        <tr>
+          <td>{{r.first_name}}</td>
+          <td>{{r.last_name}}</td>
+          <td>{{r.email_id}}</td>
+          <td>{{r.mobile_no}}</td>
+        </tr>
+      {%endfor%}
+      </tbody>
+    </table>
+    </div>
+
+
+
+
+
+{% if flag %}
+
+    <table class="table" style="text-align:center">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col" >SCORE TABLE</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="ex3">
+        <table class="table" style="text-align:center">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col" style="width:20%">NAME</th>
+              <th scope="col" style="width:30%">EMAIL ID</th>
+              <th scope="col" style="width:30%">MARKS</th>
+              <th scope="col" style="width:20%">PERCENTAGE</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+       <!--     now here we will get informations from exam schedule table and using for loop will add datas for all columns and also link with the respetive test 
+       -->
+          {%for s in score %}
+            <tr>
+              <td>{{s.name}}</td>
+              <td>{{s.email_id}}</td>
+              <td>{{s.marks}}</td>
+              <td>{{s.percentage}}</td>
+            </tr>
+          {%endfor%}
+          </tbody>
+        </table>
+        </div>
+
+
+
+
+
+        <table class="table" style="text-align:center">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col" >SUMMARY</th>
+              </tr>
+            </thead>
+          </table>
+          <div class="ex3">
+            <table class="table" style="text-align:center">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col" style="width:20%">NUMBER OF STUDENTS</th>
+                  <th scope="col" style="width:30%">MAXIMUM MARKS</th>
+                  <th scope="col" style="width:30%">MINIMUM MARKS</th>
+                  <th scope="col" style="width:20%">AVERAGE</th>
+                </tr>
+              </thead>
+              <tbody>
+              <!--
+                now here we will get informations from exam schedule table and using for loop will add datas for all columns and also link with the respetive test 
+              -->
+                <tr>
+                  <td>{{summary.0.no_of_stu}}</td>
+                  <td>{{summary.0.max_marks}}</td>
+                  <td>{{summary.0.min_marks}}</td>
+                  <td>{{summary.0.average}}</td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+        
+        
+{% endif %}
+    
+<br><br>
+<table class="table" style="text-align:center">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col" >QUESTIONS</th>
+      </tr>
+    </thead>
+  </table>
+
+{% if flag %}
+{% else %}
 <table align="center">
 
     <tr>
         <td>
             <br>
             <form method="get">
-            <button class="btn btn-primary" name="add_ques" type="submit" value={{data.0.exam_code}}>ADD QUESTION</button>   
+            <button class="btn btn-primary" name="add_ques" type="submit" value={{data.0.exam_code}}>ADD QUESTION</button>  
+            </a> 
         </form>
         </td>
     </tr>
     </table>
+{% endif %}
+
 
 {% for d in data %}
 
@@ -34,6 +219,8 @@
                 </div>
             </td>
         </tr>
+        {% if flag %}
+        {% else %}
         <tr>
             <td align="right">
                 <br>
@@ -41,12 +228,53 @@
                 <button class="btn btn-danger" name="del_ques" type="submit" value={{d.ques_id}}>DELETE</button></form>
             </td>
         </tr>
+        {% endif %}
         <br>
         </table>
 {% endif %}
 {% endfor %}
 
 
+<br><br>
+
+{% if flag %}
+
+
+<table class="table" style="text-align:center">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col" >STUDENTS REGISTERED</th>
+      </tr>
+    </thead>
+  </table>
+  <div class="ex3">
+    <table class="table" style="text-align:center">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" style="width:5%">NAME</th>
+          <th scope="col" style="width:20%">EMAIL ID</th>
+          <th scope="col" style="width:10%">MOBILE NO</th>
+          <th scope="col" style="width:65%">QUERY</th>
+        </tr>
+      </thead>
+      <tbody>
+      <!--
+        now here we will get informations from exam schedule table and using for loop will add datas for all columns and also link with the respetive test 
+      -->
+      {%for q in query %}
+        <tr>
+          <td>{{q.name}}</td>
+          <td>{{q.email_id}}</td>
+          <td>{{q.mobile_no}}</td>
+          <td>{{q.query}}</td>
+        </tr>
+      {%endfor%}
+      </tbody>
+    </table>
+    </div>
+
+
+{% endif %}
 <!---
     {{data.0.exam_code}}
 {% for cou in courses %}

@@ -4,12 +4,16 @@ from django.forms.models import ModelForm
 from database.models import *
 from django.core import validators
 
+class_stu=[tuple([x,x]) for x in range(1,13)]
+role_id=[tuple([1,"    TEACHER    "]) , tuple([2,"    STUDENT    "])]
+
 class MyUserCreationForm(UserCreationForm):
-    email_id = forms.EmailField(max_length=200 )
+    #role_id= forms.ChoiceField(choices=role_id)
+    #email_id = forms.EmailField(max_length=200 )
     
     class Meta(UserCreationForm):
         model = User
-        fields = ('role_id','email_id', 'username' , 'first_name' , 'last_name','mobile_no' ,)
+        fields = ('role_id' ,'email_id', 'username' , 'first_name' , 'last_name','mobile_no' ,)
         #widgets={
         #    'email_id' : forms.EmailInput(attrs={'class':'form-control'}),
         #}
@@ -33,7 +37,8 @@ class Add_Question_Form(ModelForm):
         model=ques_table
         fields="__all__"
 
-class Exam_Detail_Form(ModelForm):
+class Exam_Detail_Form(ModelForm,forms.Form):
+    class_= forms.ChoiceField(choices=class_stu)
     class Meta:
         model=exam_details
         fields=('exam_code', 'exam_title' , 'date' ,'start_time' ,'duration' ,'no_of_ques' , 'max_marks' , 'course_id' ,)
