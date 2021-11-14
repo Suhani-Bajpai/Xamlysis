@@ -3,7 +3,14 @@
 
 {%block title%} HOME {%endblock title%}
 
-{% block body %} 
+{%block title2%}
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/utils.css">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="stat/mobile.css">
+{%endblock title2%}
+{% block body %}
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
       <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -35,98 +42,72 @@
     </a>
   </div>
 
-
-
-
-
-
-
-
-<br><br>
-
-  <div class="card">
-    <div class="row no-gutters">
-        <div class="col-auto">
-            <img src="/static/img/online_exam_1.png" class="img-fluid" alt="">
+<div class="max-width-1 m-auto">
+        <hr>
+    </div>
+    <div class="m-auto content max-width-1 my-2">
+        <div class="content-left">
+            <h1>Xamlysis:An Online Examination Portal</h1>
+            <p>Xamlysis is an online platform for students to test out there skills and analyze their performance and
+             also, an examcraft site for teachers to set up questions for their class students in order to monitor their progress.
+            </p>
+            <p>A proper class system with identifications for student and teachers 
+            to watch over their courses and exams in an individualized interface.
+            <br>An interactive test system to attempt tests setup by the teachers
+             for their students with a real time based system, with actual examination styles.
+        </p>
         </div>
-        <div class="col">
-            <div class="card-block px-2">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Description</p>
-                <a href="#" class="btn btn-primary">BUTTON</a>
+        <div class="content-right">
+            <img src="img/home.svg" alt="iBlog">
+        </div>
+    </div>
+
+    <div class="max-width-1 m-auto">
+        <hr>
+    </div>
+    <div class="home-articles max-width-1 m-auto font2">
+        <h2>Features</h2>
+        
+        <div class="home-article">
+            <div class="home-article-img">
+                <img src="static/img/a.png">
+            </div>
+            <div class="home-article-content font1">
+         
+                    <h3>PERFORMANCE ANALYSIS</h3>
+           
+
+                <div>Students would be able analyze their performance after tests with their scores along with relative performance which would help them to improve for their final goals.
+</div>
             </div>
         </div>
-    </div>
-    <div class="card-footer w-100 text-muted">
-        Footer stating cats are CUTE little animals
-    </div>
+        <div class="home-article">
+            <div class="home-article-img">
+                <img src="static/img/c.png">
+            </div>
+            <div class="home-article-content font1">
+                    <h3>EASY TO SET - UP THE EXAMINATION PAPER</h3>
+
+                <div>With the inbuilt question set up interface, it is easier to set up and adjust all examination queries like questions, timings, assigning marks, duration of exam, etc. .
 </div>
+            </div>
+        </div>
+        <div class="home-article">
+            <div class="home-article-img">
+                <img src="static/img/b.png">
+            </div>
+            <div class="home-article-content font1">
+           
+                    <h3>IMPROVE ACCURACY AND TIME MANAGEMENT</h3>
+               
 
-<br><br>
-
-<div class="card">
-  <div class="row no-gutters">
-      <div class="col-auto">
-          <img src="/static/img/online_exam_1.png" class="img-fluid" alt="">
-      </div>
-      <div class="col">
-          <div class="card-block px-2">
-              <h4 class="card-title">Title</h4>
-              <p class="card-text">Description</p>
-              <a href="#" class="btn btn-primary">BUTTON</a>
-          </div>
-      </div>
-  </div>
-  <div class="card-footer w-100 text-muted">
-      Footer stating cats are CUTE little animals
-  </div>
+                <div>
+Students will be able to improve their accuracy with actual exam patterns and also would have better time management with the real-time based examination pattern.
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="shadow p-3 mb-5 bg-white rounded">
-<div class="card-deck">
-  <div class="card">
-    <img class="card-img-top" src="/static/img/online_exam_1.png" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+        </div>
+        
     </div>
-    <div class="card-footer">
-      <small class="text-muted">Last updated 3 mins ago</small>
-    </div>
-  </div>
-  <div class="card">
-    <img class="card-img-top" src="/static/img/online_exam_1.png" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-    </div>
-    <div class="card-footer">
-      <small class="text-muted">Last updated 3 mins ago</small>
-    </div>
-  </div>
-  <div class="card">
-    <img class="card-img-top" src="/static/img/online_exam_1.png" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-    </div>
-    <div class="card-footer">
-      <small class="text-muted">Last updated 3 mins ago</small>
-    </div>
-  </div>
-</div></div>
-
 {% endblock body%}
 </html>
 

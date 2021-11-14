@@ -1,3 +1,4 @@
+
 from os import P_OVERLAY
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
@@ -48,7 +49,7 @@ class role_id(models.Model):
 class course_id(models.Model):
     course_id = models.CharField(primary_key=True , max_length=100)
     course_name= models.TextField(max_length=100)
-
+    #class_=models.IntegerField(default=11)
 """
 class sign_up(models.Model):
     role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE)
@@ -80,7 +81,7 @@ class courses_availed(models.Model):
 class exam_details(models.Model):
     exam_code=models.CharField(max_length=50 , primary_key=True)
     exam_title=models.TextField()
-    date=models.DateField(help_text="YYYY-MM-DD")
+    date=models.DateField(help_text = "(YYYY-MM-DD)")
     start_time=models.TimeField()
     duration=models.DurationField()
     no_of_ques=models.IntegerField()
@@ -142,7 +143,6 @@ class query_table(models.Model):
 class sample(models.Model):
     email=models.CharField(max_length=200)
     phone=models.CharField(max_length=200)
-
     def __str__(self): #this is used so that the fields that are stored are displayed with thier respective emails instead of being numbered as table_name1,table_name2
         return self.email
 """

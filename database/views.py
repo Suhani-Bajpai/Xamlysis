@@ -111,7 +111,45 @@ def chat_bot(request):
     return render(request , 'database/chat_bot.html')
 
 def query_page(request):
-    return render(request , 'database/query_page.html')
+    if request.method=='GET':
+        form=Query_Form()
+        print("STAY ALWAYS HAPPY")
+    if request.method == 'POST':
+            print("HAVE A GOOD DAY")
+            form = Query_Form(request.POST)
+            current_user=request.user
+            if form.is_valid():
+                que=form.cleaned_data['query']
+                ei=current_user.email_id
+                ri=current_user.role_id
+                ec=request.GET.get('query')
+                fm=query_table(email_id_id=ei , exam_code_id=ec , role_id=ri , query=que)
+                fm.save()
+                return redirect('stu_home')
+    else:
+            form=Query_Form()
+   
+    return render (request , 'stu_sign_up.html' ,{'form':form,} )
+
+def add_notes(request):
+    if request.method=='GET':
+        form=Notes_Form()
+        print("STAY ALWAYS HAPPY")
+    if request.method == 'POST':
+            print("HAVE A GOOD DAY")
+            form = Notes_Form(request.POST)
+            current_user=request.user
+            if form.is_valid():
+                n=form.cleaned_data['notes']
+                ei=current_user.email_id
+                ec=request.GET.get('notes')
+                fm=notes_table(email_id_id=ei , exam_code_id=ec , notes=n)
+                fm.save()
+                return redirect('stu_home')
+    else:
+            form=Notes_Form()
+   
+    return render (request , 'stu_sign_up.html' ,{'form':form,} )
 
 def sign_up(request):
     return render(request , 'database/sign_up.html')
@@ -784,11 +822,74 @@ def test(request):
 
 def correct_ans(request):
     exam_id1 = request.POST.get("course")
+    current_user=request.user
     #all=ques_table.objects.all()
     ans=ques_table.objects.filter(exam_code_id=exam_id1)
+    ans=list(ans)
+    ques=[]
+    option_marked=answer_table.objects.filter(exam_code_id=exam_id1 , email_id=current_user.email_id)
+    option_marked=list(option_marked)
+    score=score_table.objects.get(email_id=current_user.email_id , exam_code_id=exam_id1)
+    score_stu=score_table.objects.filter(exam_code_id=exam_id1)
+    ed=exam_details.objects.get(exam_code=exam_id1)
+    count=1
+    max=0
+    sum=0
+    min=ed.max_marks
+    for s in score_stu:
+        count+=1
+        sum+=s.scored_marks
+        if s.scored_marks>=max:
+            max=s.scored_marks
+        elif s.scored_marks<=min:
+            min=s.scored_marks
+    data=[]
+    data.append({
+        "max":max,
+        "min":min,
+        "avg":sum/count,
+    })
+
+    print(ans )
+    print(ans[0].ques)
+    print(option_marked)
+    for i in ans:
+        for j in option_marked:
+            if j :
+                if i.ques_id==j.ques_id_id:
+                 a=0
+                 if i.correct==j.option_marked:
+                    a=i.marks
+                
+                 ques.append({
+                    "ques" : i.ques,
+                    "opt1" : i.option1,
+                    "opt2" : i.option2,
+                    "opt3" : i.option3,
+                    "opt4" : i.option4,
+                    "correct" : i.correct,
+                    "marks" : i.marks,
+                    "marks_obt":a,
+                    "option_marked" : j.option_marked,
+                })
+            else:
+                b="NONE"
+                a=0
+                ques.append({
+                    "ques" : i.ques,
+                    "opt1" : i.option1,
+                    "opt2" : i.option2,
+                    "opt3" : i.option3,
+                    "opt4" : i.option4,
+                    "correct" : i.correct,
+                    "marks" : i.marks,
+                    "marks_obt" : a,
+                    "option_marked" : b,
+                })
+    print(ques)
     for i in ans:
         print(i.exam_code_id)
-    return render(request,'test_ans.html',{'questions':ans})
+    return render(request,'test_ans.html',{'questions':ques, 'score':score ,'ed':ed, 'data':data,})
 
 def returner(request):
     return redirect('stu_home')

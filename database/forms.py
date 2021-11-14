@@ -67,3 +67,13 @@ class  Change_Mobile_No_Form(ModelForm):
     class Meta:
         model=User
         fields=('mobile_no',)
+
+class Query_Form(ModelForm):
+    class Meta:
+        model=query_table
+        fields=('query',)
+
+class Notes_Form(ModelForm):
+    class Meta:
+        model=notes_table
+        fields=('notes',)
