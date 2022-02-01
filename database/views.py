@@ -16,9 +16,16 @@ from .forms import *
 from django.forms import modelformset_factory
 from os import access
 
-
 # Create your views here.
 # check for anonymous user - not logged in user
+
+def index(request):
+    return render(request , 'stu_future.html')
+
+
+
+
+
 
 def temp_sign_up(request):
     courses_display= class_stu_tech.objects.all().filter(class_stu_tech=11)
@@ -54,7 +61,7 @@ def temp_sign_up(request):
             #raw_password = form.cleaned_data.get('password1')
             #user = authenticate(username=username, password=raw_password)
             auth_login(request, user)
-            return redirect('home')
+            return redirect('/class_select/')
     else:
         form = MyUserCreationForm()
         fm=class_stu_tech_form()
@@ -183,7 +190,7 @@ def stu_home(request):
     if request.GET.get('reg'):
         regi=registration_table(exam_code_id=request.GET.get('reg') , email_id_id=current_user.email_id , role_id_id=current_user.role_id.role_id)
         regi.save()
-        return HttpResponse('succeed')
+        return redirect('stu_home')
 
     if(current_user.role_id.role_id==2):
         stud_data = CST.objects.get(email_id=current_user.email_id,)
@@ -218,7 +225,7 @@ def stu_home(request):
                 exams.append(s)
 
     given_exams = score_table.objects.filter(email_id_id=current_user.email_id,)
-    next_exams=[]
+    """next_exams=[]
     donttake=[]
     today_exams=[]
     [donttake.append(str(x.exam_code_id)) for x in given_exams]
@@ -229,13 +236,43 @@ def stu_home(request):
         elif i.date==datetime.datetime.now().date():
             if(i.exam_code not in donttake):
                 today_exams.append(i)
-
+                
     
+    reg=registration_table.objects.filter(email_id=current_user.email_id).values('exam_code')
+    regi=[]
+    [regi.append(i['exam_code']) for i in reg]"""
+    #print(regi)
+
+    next_exams=[]
+    donttake=[]
+    today_exams=[]
+    nex=[]
+    regis=[]
+    [donttake.append(str(x.exam_code_id)) for x in given_exams]
+    for i in registration_table.objects.all():
+        if(i.email_id_id==current_user.email_id):
+            regis.append(i.exam_code_id)
+            print(i.exam_code_id)
+    for i in exams:
+        if (i.date==datetime.datetime.now().date()):
+            if(i.exam_code not in donttake):
+                if(i.exam_code in regis):
+                    print(i.exam_code,' ')
+                    today_exams.append(i)
+                    nex.append(i.exam_code)
+
+    for i in exams:
+        if (i.date >= datetime.datetime.now().date()):
+            if(i.exam_code not in donttake):
+                if(i.exam_code not in nex):
+                    nex.append(i.exam_code)
+                    next_exams.append(i)    
 
     reg=registration_table.objects.filter(email_id=current_user.email_id).values('exam_code')
     regi=[]
     [regi.append(i['exam_code']) for i in reg]
     #print(regi)
+
 
 
     context={
@@ -348,6 +385,17 @@ def teach_home(request):
     edobj=exam_details.objects.filter(email_id_id=current_user.email_id).values('exam_title' , 'exam_code', 'date' , 'max_marks' , 'duration' , 'start_time' ,'class_stu' ,)
     edobj=list(edobj)
     #print(edobj)
+    print(edobj[0]['duration'] , 'hello')
+    time=str(edobj[0]['duration'])
+    print(time)
+    a=time.find(":")+1
+    b=time.find(":", a)
+    hour=int(time[0:a-1])
+    min=int(time[a:b])
+    sec=int(time[b+1:])
+    dur=hour*60*60+min*60+sec
+    print(hour , min  ,sec)
+    print(a , b , "hi")
     #edobj=edobj[:]["exam_title"]
     #no_q=exam_details.objects.filter(exam_code=ec).values('no_of_ques')[0]["no_of_ques"]
 
@@ -417,11 +465,19 @@ def teach_home(request):
             count+=1
             if s.scored_marks>=max:
                 max=s.scored_marks
-            elif s.scored_marks<=min:
+            if s.scored_marks<=min:
                 min=s.scored_marks
             sum+=s.scored_marks
         if request.GET.get('prev_up')=='1':
-            summary.append({
+            if count==0:
+             summary.append({
+            "max_marks" : 0,
+            "min_marks" : 0,
+            "average" : 0,
+            "no_of_stu" : count,
+        })
+            else:
+                 summary.append({
             "max_marks" : max,
             "min_marks" : min,
             "average" : sum/count,
@@ -435,7 +491,7 @@ def teach_home(request):
             que.append({
                 "query":q.query,
                 "email_id":u.email_id,
-                "name":u.first_name+u.second_name,
+                "name":u.first_name+u.last_name,
                 "mobile_no":u.mobile_no,
             })
         payload ={ 'data':data}
@@ -485,7 +541,7 @@ def teach_home(request):
             obj.no_of_ques+=1
             obj.max_marks+=mk
             obj.save(update_fields=['no_of_ques' , 'max_marks'])
-            return redirect(f'/teachers_home/?course={request.GET.get("add_ques")}') 
+            return redirect(f'/teachers_home/?prev_up=2&course={request.GET.get("add_ques")}') 
         
         elif form1.is_valid():
             dat=form1.cleaned_data['date']
@@ -528,7 +584,7 @@ def teach_home(request):
         for x in obj:
             print(x)
             print(x['date'])
-            if x['date'] >=d.date() :
+            if x['date'] >d.date() :
                 list_obj.append(x)
         flag=0
         return render(request , 'teach_home.html' , {'edobj':list_obj ,'flag':flag, })
@@ -538,7 +594,7 @@ def teach_home(request):
         d=datetime.datetime.now()
         list_obj=[]
         for x in obj:
-            if x['date'] <d.date() :
+            if x['date'] <=d.date() :
                 list_obj.append(x)
         #list_obj.append(0)
         flag=1
@@ -680,7 +736,21 @@ def remove_class(request):
 
 def course_select(request):
     current_user=request.user
-    all_courses = course_id.objects.all()
+    classes=CST.objects.filter(email_id_id=current_user.email_id)
+    classes=list(classes)
+    class_stu=[]
+    for c in classes:
+        class_stu.append(c.class_stu_tech)
+
+    
+    all_course = course_id.objects.all()
+    all_courses=[]
+    for a in all_course:
+        for c in class_stu:
+            if a.class_stu_tech==c:
+                all_courses.append(a)
+
+    print(all_courses)
     availed_courses = courses_availed.objects.filter(email_id=current_user.email_id,)
     all=[]  
     [all.append(str(x.course_id)) for x in all_courses]
@@ -788,7 +858,11 @@ def test(request):
                 o_ref.save()
             else:
                 wrong+=1
-                o_ref=answer_table(exam_code_id=exid1,email_id_id=current_user.email_id,check_correct=0,role_id_id=2,option_marked=q.correct,ques_id_id=q.ques_id)
+                ans=str(request.POST.get(q.ques))
+                l=len(ans)
+                ans=ans[l-1]
+                ans=int(ans)
+                o_ref=answer_table(exam_code_id=exid1,email_id_id=current_user.email_id,check_correct=0,role_id_id=2,option_marked=ans,ques_id_id=q.ques_id)
                 o_ref.save()
 
         percent = score/(total) *100
@@ -811,7 +885,17 @@ def test(request):
         questions=ques_table.objects.filter(exam_code=examid)
         instr=exam_details.objects.get(exam_code=examid)
         timee=str(instr.duration)
-        max_time=60
+        print(instr.duration)
+        time=instr.duration
+        time=str(time)
+        a=time.find(":")+1
+        b=time.find(":", a)
+        hour=int(time[0:a-1])
+        min=int(time[a:b])
+        sec=int(time[b+1:])
+        dur=hour*60*60+min*60+sec
+        #max_time=60
+        max_time=dur
         context = {
             'questions':questions,
             'inst':instr, 
@@ -832,16 +916,19 @@ def correct_ans(request):
     score=score_table.objects.get(email_id=current_user.email_id , exam_code_id=exam_id1)
     score_stu=score_table.objects.filter(exam_code_id=exam_id1)
     ed=exam_details.objects.get(exam_code=exam_id1)
-    count=1
+    notes=notes_table.objects.filter(exam_code_id=exam_id1)
+    count=0
     max=0
     sum=0
     min=ed.max_marks
     for s in score_stu:
         count+=1
         sum+=s.scored_marks
+        print(s.scored_marks , "HELLO")
         if s.scored_marks>=max:
             max=s.scored_marks
-        elif s.scored_marks<=min:
+        if s.scored_marks<=min:
+            print(min,"HI")
             min=s.scored_marks
     data=[]
     data.append({
@@ -889,7 +976,14 @@ def correct_ans(request):
     print(ques)
     for i in ans:
         print(i.exam_code_id)
-    return render(request,'test_ans.html',{'questions':ques, 'score':score ,'ed':ed, 'data':data,})
+
+    note=[]
+    for n in notes:
+        note.append({
+            "exam_code":exam_id1,
+            "notes":n.notes,
+        })
+    return render(request,'test_ans.html',{'questions':ques, 'score':score ,'ed':ed, 'data':data, 'notes':note,})
 
 def returner(request):
     return redirect('stu_home')

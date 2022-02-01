@@ -36,17 +36,17 @@
       {% if user.is_authenticated %}
       <span class="badge badge-pill badge-primary">
       <li class="nav-item active"style="font-size:20px";>
-        <a class="nav-link px-4" href="/stu_home"><span>DASHBOARD</span></a>
+        <a class="nav-link px-4" href="/stu_home/"><span>DASHBOARD</span></a>
       </li></span>
       {%endif%}
       
       {% if user.is_authenticated %}
-      <li class="nav-item active" style="font-size:20px" ;="">
+   <!-- <li class="nav-item active" style="font-size:20px" ;="">
         <a class="nav-link px-4" href="/course_select"><span>Courses</span></a>
       </li>
       <li class="nav-item active" style="font-size:20px" ;="">
         <a class="nav-link px-4" href="/class_select/"><span>Class</span></a>
-      </li>
+      </li>-->
       {% else %}
       <li class="nav-item dropdown active"style="font-size:20px";>
         <a class="nav-link dropdown-toggle px-4" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

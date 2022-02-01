@@ -202,6 +202,37 @@ overflow-y: scroll;
 
 
 
+        <table class="table" style="text-align:center">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col" >NOTES</th>
+            </tr>
+          </thead>
+        </table>
+        <div class="ex3">
+          <table class="table" style="text-align:center">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" style="width:20%">EXAM</th>
+                <th scope="col" style="width:80%">NOTES</th>
+              </tr>
+            </thead>
+            <tbody>
+            <!--
+              now here we will get informations from exam schedule table and using for loop will add datas for all columns and also link with the respetive test 
+            -->
+            {%for n in notes%}
+              <tr>
+                <td>{{n.exam_code}}</td>
+                <td>{{n.notes}}</td>
+              </tr>
+            {%endfor%}
+            </tbody>
+          </table>
+          </div>
+        
+        
+
 
        
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

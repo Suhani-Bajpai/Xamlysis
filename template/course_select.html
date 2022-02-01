@@ -21,7 +21,7 @@
         <table align="center" >
         <tr>
             <th colspan="2">
-                <button type="submit" name="course" style="background-color:black;font-size: 15px;border-radius: 12px;width:100px;padding: 10px 20px;color: #0044cc;border: 2px solid #003399;" value={{x}}>{{x}}</button>
+                <button type="submit" name="course" style="background-color:black;font-size: 15px;border-radius: 12px;width:200px;padding: 10px 20px;color: #0044cc;border: 2px solid #003399;" value={{x}}>{{x}}</button>
             </th>
         </tr>
         </table>
@@ -37,7 +37,7 @@
         <table align="center">
         <tr>
             <th colspan="2">
-                <button type="submit" style="background-color: black;border-radius: 12px;font-size: 15px;color: #0044cc;width: 100px;padding: 10px 20px;border: 2px solid #003399;" name="course" value={{x}}>{{x}}</button>
+                <button type="submit" style="background-color: black;border-radius: 12px;font-size: 15px;color: #0044cc;width: 200px;padding: 10px 20px;border: 2px solid #003399;" name="course" value={{x}}>{{x}}</button>
             </th>
         </tr> 
         </table>
@@ -47,4 +47,10 @@
   </div>
 </div>
 <br><br><br><br>
+
+<div align="center">
+    <form action="/" method="POST">{% csrf_token %}
+    <button type="submit" style="background-color: black;border-radius: 12px;font-size: 15px;color: #fafbfc;width: 100px;padding: 10px 20px;border: 2px solid #003399;" >SUBMIT</button>
+    </form>
+    </div>
 {% endblock body %}

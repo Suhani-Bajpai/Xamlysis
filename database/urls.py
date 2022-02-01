@@ -14,7 +14,7 @@ urlpatterns = [
     path('sign_up/' , views.sign_up , name='sign_up'),
     path('student_exams_scheduled/' , views.stu_future , name='stu_future'),
     
-    path('stu_home' , views.stu_home , name='stu_home'),
+    path('stu_home/' , views.stu_home , name='stu_home'),
     path('login/stu_home/' , views.stu_home , name='stu_home'),
 
     path('student_home_page/' , views.stu_home , name='stu_home'),
@@ -50,4 +50,5 @@ urlpatterns = [
     path('returner/',views.returner),
     path('correct_ans/',views.correct_ans),
 
+    path('index/' , views.index , name="index" ),
 ]

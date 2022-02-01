@@ -28,6 +28,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,6 +67,7 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = 'Online_Exam_Portal_Xamlysis.routing.application'
 WSGI_APPLICATION = 'Online_Exam_Portal_Xamlysis.wsgi.application'
 
 

@@ -49,7 +49,7 @@ class role_id(models.Model):
 class course_id(models.Model):
     course_id = models.CharField(primary_key=True , max_length=100)
     course_name= models.TextField(max_length=100)
-    #class_=models.IntegerField(default=11)
+    class_stu_tech=models.IntegerField(default=11)
 """
 class sign_up(models.Model):
     role_id=models.ForeignKey("role_id" , on_delete=models.CASCADE)
@@ -83,7 +83,7 @@ class exam_details(models.Model):
     exam_title=models.TextField()
     date=models.DateField(help_text = "(YYYY-MM-DD)")
     start_time=models.TimeField()
-    duration=models.DurationField()
+    duration=models.DurationField( help_text="(HH:MM:SS)")
     no_of_ques=models.IntegerField()
     max_marks=models.IntegerField()
     course_id=models.ForeignKey("course_id" , on_delete=models.CASCADE )
